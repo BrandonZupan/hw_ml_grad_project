@@ -27,6 +27,95 @@ module Cfu (
   input               clk
 );
 
+  // Wires
+  wire [255:0]  BUS;
+  wire [1:0]    bus_sel;    // selects what is put onto bus
+
+  // General
+  wire [2:0]    vlmul;
+  wire [31:0]   vtype;
+  wire [5:0]    vlen;
+
+  // Register File
+  wire [4:0]    reg_op0_sel;
+  wire [4:0]    reg_op1_sel;
+
+
+  wire [4:0]    reg_wb_sel;
+  wire          reg_load;
+
+  wire [255:0]  reg_op0_value;
+  wire [255:0]  reg_op1_value;
+
+  // ALU
+  wire [7:0]    alu_imm;
+  wire          alu_op1_sel;    // Select signal for MUX that goes into OP1 of ALU
+  wire [255:0]  alu_op1_in;     // Output of ALU op1 mux
+  wire [1:0]    alu_mode;
+  wire [255:0]  alu_out;
+
+  // Multiply
+  wire [255:0]  mul_out;
+
+  // Byte accumulator
+  wire [7:0]    acc_out;
+
+  // bus mux
+  // 00 : disconnected
+  // 01 : alu
+  // 10 : multiply
+  // 11 : byte accumulator
+  assign BUS = bus_sel[1] ? (bus_sel[0] ? acc_out : mul_out) : (bus_sel[0] ? alu_out : 255'bZ);
+
+  // Blocks
+  register_file register_file0 (
+    clk, 
+    reset,
+
+    reg_op0_sel,
+    reg_op1_sel,
+    vtype,
+    vlen,
+
+    reg_wb_sel,
+    BUS,
+    wb_load,
+
+    reg_op0_value,
+    reg_op1_value
+  );
+
+  // mux for determining op1 of mux
+  wire alu_imm_padded = {247'b0, alu_imm};
+  assign alu_op1_in = alu_op1_sel ? alu_imm_padded : reg_op0_value;
+
+  alu alu0 (
+    reg_op0_value,
+    alu_op1_in,
+
+    alu_mode,
+
+    alu_out
+  );
+
+  multiply multiply0 (
+    reg_op0_value,
+    reg_op1_value,
+
+    vlmul,
+
+    mul_out
+  );
+
+  byte_accumulator byte_accumulator0 (
+    clk,
+    reset,
+
+    reg_op0_value[31:0],
+    acc_out
+  );
+
+
   // Trivial handshaking for a combinational CFU
   assign rsp_valid = cmd_valid;
   assign cmd_ready = rsp_ready;
