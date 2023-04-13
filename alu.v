@@ -11,7 +11,7 @@ module alu (
     genvar i;
 
     generate 
-        for (i = 0; i < 8; i = i + 1) begin
+        for (i = 0; i < 32; i = i + 1) begin
             // 8*i
             alu_8_bit alu0 (op0_value[(8*i) + 7, 8*i], op1_value[(8*i) + 7, 8*i], mode, alu_out[(8*i) + 7, 8*i]);
         end
