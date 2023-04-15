@@ -26,7 +26,7 @@ int main(int argc, char** argv, char** env) {
         dut->op0_value = in;
         dut->op1_value = in;
         dut->eval();
-        std::cout << dut->alu_out << std::endl;
+        std::cout << dut->alu_out[0] << std::endl;
         m_trace->dump(sim_time);
         // m_trace->dump(dut->alu_out);
         sim_time++;
