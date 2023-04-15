@@ -1,6 +1,0 @@
-top.v
-cfu.v
-alu.v
-byte_accululator.v
-multiply.v
-register_file.v
