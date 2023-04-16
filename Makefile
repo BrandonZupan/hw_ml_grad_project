@@ -1,4 +1,4 @@
-MODULE=multiply_8_bit
+MODULE=byte_accumulator
 
 .PHONY:sim
 sim: waveform.vcd
