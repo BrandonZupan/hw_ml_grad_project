@@ -85,8 +85,16 @@ module Cfu (
   );
 
   // mux for determining op1 of mux
-  wire [255:0] alu_imm_padded = {248'b0, alu_imm};
-  assign alu_op1_in = alu_op1_sel ? alu_imm_padded : reg_op0_value;
+  wire [255:0] alu_imm_padded;
+
+  genvar i;
+  generate 
+    for (i = 0; i < 32; i = i + 1) begin
+      assign alu_imm_padded[(i*8)+7 : i*8] = alu_imm;
+    end
+  endgenerate
+  
+  assign alu_op1_in = alu_op1_sel ? alu_imm_padded : reg_op1_value;
 
   alu alu0 (
     reg_op0_value,
