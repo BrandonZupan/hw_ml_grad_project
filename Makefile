@@ -1,4 +1,4 @@
-MODULE=alu
+MODULE=multiply_8_bit
 
 .PHONY:sim
 sim: waveform.vcd
@@ -25,10 +25,10 @@ waveform.vcd: ./obj_dir/V$(MODULE)
 	@echo "### BUILDING SIM ###"
 	make -C obj_dir -f V$(MODULE).mk V$(MODULE)
 
-.stamp.verilate: $(MODULE).v tb_$(MODULE).cpp
+.stamp.verilate: $(MODULE).v tb/tb_$(MODULE).cpp
 	@echo
 	@echo "### VERILATING ###"
-	verilator -Wall --trace -cc $(MODULE).v --exe tb_$(MODULE).cpp
+	verilator -Wall --trace --x-assign unique --x-initial unique -cc $(MODULE).v --exe tb/tb_$(MODULE).cpp
 	@touch .stamp.verilate
 
 .PHONY:lint
