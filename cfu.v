@@ -65,7 +65,7 @@ module Cfu (
   // 01 : alu
   // 10 : multiply
   // 11 : byte accumulator
-  assign BUS = bus_sel[1] ? (bus_sel[0] ? acc_out : mul_out) : (bus_sel[0] ? alu_out : 255'bZ);
+  assign BUS = bus_sel[1] ? (bus_sel[0] ? {248'b0, acc_out} : mul_out) : (bus_sel[0] ? alu_out : 256'bZ);
 
   // Blocks
   register_file register_file0 (
@@ -74,19 +74,18 @@ module Cfu (
 
     reg_op0_sel,
     reg_op1_sel,
-    vtype,
-    vlen,
+    vlmul,
 
     reg_wb_sel,
     BUS,
-    wb_load,
+    reg_load,
 
     reg_op0_value,
     reg_op1_value
   );
 
   // mux for determining op1 of mux
-  wire alu_imm_padded = {247'b0, alu_imm};
+  wire [255:0] alu_imm_padded = {248'b0, alu_imm};
   assign alu_op1_in = alu_op1_sel ? alu_imm_padded : reg_op0_value;
 
   alu alu0 (
@@ -108,9 +107,6 @@ module Cfu (
   );
 
   byte_accumulator byte_accumulator0 (
-    clk,
-    reset,
-
     reg_op0_value[31:0],
     acc_out
   );
