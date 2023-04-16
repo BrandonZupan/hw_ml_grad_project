@@ -1,4 +1,4 @@
-MODULE=byte_accumulator
+MODULE=register_out_select
 
 .PHONY:sim
 sim: waveform.vcd
