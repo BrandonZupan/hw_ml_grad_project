@@ -12,168 +12,121 @@ module register_file (
     input [255:0]   wb_in,
     input           wb_load,
 
-    output reg [255:0]  op0_out,
-    output reg [255:0]  op1_out
+    output [255:0]  op0_out,
+    output [255:0]  op1_out,
+
+    // for debug
+    output [31:0] r0,
+    output [31:0] r1,
+    output [31:0] r2,
+    output [31:0] r3,
+    output [31:0] r4,
+    output [31:0] r5,
+    output [31:0] r6,
+    output [31:0] r7,
+    output [31:0] r8,
+    output [31:0] r9,
+    output [31:0] r10,
+    output [31:0] r11,
+    output [31:0] r12,
+    output [31:0] r13,
+    output [31:0] r14,
+    output [31:0] r15,
+    output [31:0] r16,
+    output [31:0] r17,
+    output [31:0] r18,
+    output [31:0] r19,
+    output [31:0] r20,
+    output [31:0] r21,
+    output [31:0] r22,
+    output [31:0] r23,
+    output [31:0] r24,
+    output [31:0] r25,
+    output [31:0] r26,
+    output [31:0] r27,
+    output [31:0] r28,
+    output [31:0] r29,
+    output [31:0] r30,
+    output [31:0] r31
 
 );
 
-    reg [31:0] 
-    r0, r1, r2, r3,
-    r4, r5, r6, r7,
-    r8, r9, r10, r11,
-    r12, r13, r14, r15, 
-    r16, r17, r18, r19, 
-    r20, r21, r22, r23, 
-    r24, r25, r26, r27, 
-    r28, r29, r30, r31;
+    wire [1023:0] registers_in;
+    wire [1023:0] registers_out;
 
-    wire [1023:0] registers = {
-        r31, r30, r29, r28,
-        r27, r26, r25, r24,
-        r23, r22, r21, r20,
-        r19, r18, r17, r16,
-        r15, r14, r13, r12,
-        r11, r10, r9, r8,
-        r7, r6, r5, r4,  
-        r3, r2, r1, r0
-    };
+    // for debug
+    assign r0 = registers_out[31:0];
+    assign r1 = registers_out[63:32];
+    assign r2 = registers_out[95:64];
+    assign r3 = registers_out[127:96];
+    assign r4 = registers_out[159:128];
+    assign r5 = registers_out[191:160];
+    assign r6 = registers_out[223:192];
+    assign r7 = registers_out[255:224];
+    assign r8 = registers_out[287:256];
+    assign r9 = registers_out[319:288];
+    assign r10 = registers_out[351:320];
+    assign r11 = registers_out[383:352];
+    assign r12 = registers_out[415:384];
+    assign r13 = registers_out[447:416];
+    assign r14 = registers_out[479:448];
+    assign r15 = registers_out[511:480];
+    assign r16 = registers_out[543:512];
+    assign r17 = registers_out[575:544];
+    assign r18 = registers_out[607:576];
+    assign r19 = registers_out[639:608];
+    assign r20 = registers_out[671:640];
+    assign r21 = registers_out[703:672];
+    assign r22 = registers_out[735:704];
+    assign r23 = registers_out[767:736];
+    assign r24 = registers_out[799:768];
+    assign r25 = registers_out[831:800];
+    assign r26 = registers_out[863:832];
+    assign r27 = registers_out[895:864];
+    assign r28 = registers_out[927:896];
+    assign r29 = registers_out[959:928];
+    assign r30 = registers_out[991:960];
+    assign r31 = registers_out[1023:992];
 
     // Output selection
-    register_out_select register_out_select0 (registers, op0_sel, vlmul, op0_out);
-    register_out_select register_out_select1 (registers, op1_sel, vlmul, op1_out);
+    register_out_select register_out_select0 (registers_out, op0_sel, vlmul, op0_out);
+    register_out_select register_out_select1 (registers_out, op1_sel, vlmul, op1_out);
 
     wire [31:0] wb_reg_load;
 
-    wire [31:0] 
-    r0_in, r1_in, r2_in, r3_in,
-    r4_in, r5_in, r6_in, r7_in,
-    r8_in, r9_in, r10_in, r11_in,
-    r12_in, r13_in, r14_in, r15_in, 
-    r16_in, r17_in, r18_in, r19_in, 
-    r20_in, r21_in, r22_in, r23_in, 
-    r24_in, r25_in, r26_in, r27_in, 
-    r28_in, r29_in, r30_in, r31_in;
+    // wire [31:0] 
+    // r0_in, r1_in, r2_in, r3_in,
+    // r4_in, r5_in, r6_in, r7_in,
+    // r8_in, r9_in, r10_in, r11_in,
+    // r12_in, r13_in, r14_in, r15_in, 
+    // r16_in, r17_in, r18_in, r19_in, 
+    // r20_in, r21_in, r22_in, r23_in, 
+    // r24_in, r25_in, r26_in, r27_in, 
+    // r28_in, r29_in, r30_in, r31_in;
 
-    wire [1023:0] registers_in = {
-        r31_in, r30_in, r29_in, r28_in,
-        r27_in, r26_in, r25_in, r24_in,
-        r23_in, r22_in, r21_in, r20_in,
-        r19_in, r18_in, r17_in, r16_in,
-        r15_in, r14_in, r13_in, r12_in,
-        r11_in, r10_in, r9_in, r8_in,
-        r7_in, r6_in, r5_in, r4_in,  
-        r3_in, r2_in, r1_in, r0_in
-    };
+    // wire [1023:0] registers_in = {
+    //     r31_in, r30_in, r29_in, r28_in,
+    //     r27_in, r26_in, r25_in, r24_in,
+    //     r23_in, r22_in, r21_in, r20_in,
+    //     r19_in, r18_in, r17_in, r16_in,
+    //     r15_in, r14_in, r13_in, r12_in,
+    //     r11_in, r10_in, r9_in, r8_in,
+    //     r7_in, r6_in, r5_in, r4_in,  
+    //     r3_in, r2_in, r1_in, r0_in
+    // };
+
+    wire [1023:0] registers_in;
 
 
     // Set reg inputs
     wb_select wb_select0 (wb_load, wb_sel, vlmul, wb_reg_load);
     wb_align wb_align0 (wb_in, wb_sel, vlmul, registers_in);
 
-    // Writeback
-    always @(clk, reset, wb_load) begin
-        if (reset) begin
-            r0 <= 0;
-            r1 <= 0;
-            r2 <= 0;
-            r3 <= 0;
-            r4 <= 0;
-            r5 <= 0;
-            r6 <= 0;
-            r7 <= 0;
-            r8 <= 0;
-            r9 <= 0;
-            r10 <= 0;
-            r11 <= 0;
-            r12 <= 0;
-            r13 <= 0;
-            r14 <= 0;
-            r15 <= 0;
-            r16 <= 0;
-            r17 <= 0;
-            r18 <= 0;
-            r19 <= 0;
-            r20 <= 0;
-            r21 <= 0;
-            r22 <= 0;
-            r23 <= 0;
-            r24 <= 0;
-            r25 <= 0;
-            r26 <= 0;
-            r27 <= 0;
-            r28 <= 0;
-            r29 <= 0;
-            r30 <= 0;
-            r31 <= 0;
-        end else begin
-            if (wb_reg_load[0])
-                r0 = r0_in;
-            if (wb_reg_load[1])
-                r1 = r1_in;
-            if (wb_reg_load[2])
-                r2 = r2_in;
-            if (wb_reg_load[3])
-                r3 = r3_in;
-            if (wb_reg_load[4])
-                r4 = r4_in;
-            if (wb_reg_load[5])
-                r5 = r5_in;
-            if (wb_reg_load[6])
-                r6 = r6_in;
-            if (wb_reg_load[7])
-                r7 = r7_in;
-            if (wb_reg_load[8])
-                r8 = r8_in;
-            if (wb_reg_load[9])
-                r9 = r9_in;
-            if (wb_reg_load[10])
-                r10 = r10_in;
-            if (wb_reg_load[11])
-                r11 = r11_in;
-            if (wb_reg_load[12])
-                r12 = r12_in;
-            if (wb_reg_load[13])
-                r13 = r13_in;
-            if (wb_reg_load[14])
-                r14 = r14_in;
-            if (wb_reg_load[15])
-                r15 = r15_in;
-            if (wb_reg_load[16])
-                r16 = r16_in;
-            if (wb_reg_load[17])
-                r17 = r17_in;
-            if (wb_reg_load[18])
-                r18 = r18_in;
-            if (wb_reg_load[19])
-                r19 = r19_in;
-            if (wb_reg_load[20])
-                r20 = r20_in;
-            if (wb_reg_load[21])
-                r21 = r21_in;
-            if (wb_reg_load[22])
-                r22 = r22_in;
-            if (wb_reg_load[23])
-                r23 = r23_in;
-            if (wb_reg_load[24])
-                r24 = r24_in;
-            if (wb_reg_load[25])
-                r25 = r25_in;
-            if (wb_reg_load[26])
-                r26 = r26_in;
-            if (wb_reg_load[27])
-                r27 = r27_in;
-            if (wb_reg_load[28])
-                r28 = r28_in;
-            if (wb_reg_load[29])
-                r29 = r29_in;
-            if (wb_reg_load[30])
-                r30 = r30_in;
-            if (wb_reg_load[31])
-                r31 = r31_in;
-            
+    genvar i;
+    generate 
+        for (i = 0; i < 32; i = i + 1) begin
+            register_single register_single0 (clk, reset, wb_reg_load[i], registers_in[(i*32) + 31: i*32], registers_out[(i*32) + 31: i*32]);
         end
-    end
-
-
+    endgenerate
 
 endmodule

@@ -2,15 +2,17 @@ module register_single (
     input           clk,
     input           reset,
     input           enable,
-    input [WIDTH:0]    in,
+    input [WIDTH-1:0]    in,
 
-    output [WIDTH:0]   out
+    output [WIDTH-1:0]   out
 );
     parameter WIDTH = 32;
 
-    reg [WIDTH:0] r;
+    reg [WIDTH-1:0] r;
 
-    always @(clk, reset, enable) begin
+    assign out = r;
+
+    always @(posedge clk, reset) begin
         if (reset)
             r <= 0;
         else if (enable)
