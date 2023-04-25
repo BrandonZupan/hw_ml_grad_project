@@ -59,13 +59,16 @@ module Cfu (
 
   // Byte accumulator
   wire [7:0]    acc_out;
+  // Group Accumulator
+  wire [31:0]   gacc_out;
 
+  wire    vl_load;
   // bus mux
-  // 00 : disconnected
+  // 00 : group accumulator
   // 01 : alu
   // 10 : multiply
   // 11 : byte accumulator
-  assign BUS = bus_sel[1] ? (bus_sel[0] ? {248'b0, acc_out} : mul_out) : (bus_sel[0] ? alu_out : 256'bZ);
+  assign BUS = bus_sel[1] ? (bus_sel[0] ? {248'b0, acc_out} : mul_out) : (bus_sel[0] ? alu_out : {224'b0, gacc_out});
 
   // Blocks
   register_file register_file0 (
@@ -119,7 +122,33 @@ module Cfu (
     acc_out
   );
 
+  group_accumulator group_accumulator0 (
+    reg_op0_value,
+    gacc_out
+  );
 
+  decoder_block decoder_block0 (
+    cmd_valid,
+    cmd_payload_function_id,
+    cmd_payload_inputs_0,
+    cmd_payload_inputs_1,
+    reg_op0_sel,
+    reg_op1_sel,
+    reg_wb_sel,
+    reg_load,
+    alu_imm,
+    alu_op1_sel,
+    alu_mode,
+    bus_sel,
+    vl_load
+  );
+
+  always_comb begin
+    if (vl_load) begin
+      vtype=cmd_payload_inputs_0;
+      vlmul=vtype[2:0];
+    end
+  end
   // Trivial handshaking for a combinational CFU
   assign rsp_valid = cmd_valid;
   assign cmd_ready = rsp_ready;
