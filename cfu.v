@@ -85,6 +85,7 @@ module Cfu (
   );
 
   // mux for determining op1 of mux
+  assign alu_imm = cmd_payload_inputs_1[7:0];
   wire [255:0] alu_imm_padded;
 
   genvar i;
