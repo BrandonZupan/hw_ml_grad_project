@@ -128,7 +128,7 @@ module Cfu (
     gacc_out
   );
 
-  decoder_block decoder_block0 (
+  decoder_unit decoder_unit0 (
     cmd_valid,
     cmd_payload_function_id,
     cmd_payload_inputs_0,
